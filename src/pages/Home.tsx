@@ -1,4 +1,3 @@
-// src/pages/Home.tsx
 import { Building2, Utensils, Gem, Globe, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Reveal } from '../components/Reveal';
@@ -98,14 +97,12 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            // Changed gap to accommodate the new box padding
             className="grid md:grid-cols-2 gap-8 lg:gap-12"
           >
             {services.map((service, index) => (
               <motion.div 
                 key={index} 
                 variants={itemVariants} 
-                // Added group, padding, border, and the hover:bg-white transition
                 className="group p-8 border border-white/10 rounded-sm hover:bg-white transition-colors duration-300 cursor-default"
               >
                 <div className="mb-6 overflow-hidden">
@@ -114,15 +111,12 @@ export default function Home() {
                     transition={{ duration: 0.3 }}
                     className="inline-block"
                   >
-                    {/* Icon turns black on hover */}
                     <service.icon className="w-12 h-12 text-white/80 stroke-[1.5] group-hover:text-black transition-colors duration-300" />
                   </motion.div>
                 </div>
-                {/* Title turns black on hover */}
                 <h3 className="text-3xl font-light mb-4 tracking-tight group-hover:text-black transition-colors duration-300">
                     {service.title}
                 </h3>
-                {/* Description turns dark gray on hover */}
                 <p className="text-gray-400 leading-relaxed font-light text-lg group-hover:text-black/70 transition-colors duration-300">
                   {service.description}
                 </p>
@@ -132,7 +126,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRECISION SECTION */}
+      {/* PRECISION SECTION (With New Image) */}
       <section className="py-32 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -155,10 +149,20 @@ export default function Home() {
             </div>
             
             <Reveal delay={0.4}>
-              <div className="relative group cursor-pointer">
-                <div className="absolute -inset-1 bg-gradient-to-r from-white/20 to-gray-800/20 rounded-sm blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
-                <div className="relative aspect-[4/5] bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-sm overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-black to-black"></div>
+              <div className="relative group cursor-pointer overflow-hidden rounded-sm">
+                {/* Decorative blur glow behind the image */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-white/20 to-gray-800/20 blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
+                
+                <div className="relative aspect-[4/5] bg-gray-900 border border-white/10 rounded-sm overflow-hidden">
+                  <motion.img 
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    src="https://images.unsplash.com/photo-1600607686527-6fb886090705?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80"
+                    alt="Abstract architectural geometry" 
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700"
+                  />
+                  {/* Subtle overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
                 </div>
               </div>
             </Reveal>
