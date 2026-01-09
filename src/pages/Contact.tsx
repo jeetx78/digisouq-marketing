@@ -79,8 +79,8 @@ export default function Contact() {
                     <Mail className="w-5 h-5 text-gray-500 mt-1 stroke-[1.5]" />
                     <div>
                       <p className="text-sm text-gray-500 font-light mb-1">Email</p>
-                      <a href="mailto:hello@digisouq.com" className="text-white font-light hover:text-gray-300 transition-colors">
-                        hello@digisouq.com
+                      <a href="mailto:digisouq.in@gmail.com" className="text-white font-light hover:text-gray-300 transition-colors">
+                        digisouq.in@gmail.com
                       </a>
                     </div>
                   </div>
@@ -89,7 +89,7 @@ export default function Contact() {
                     <div>
                       <p className="text-sm text-gray-500 font-light mb-1">Phone</p>
                       <a href="tel:+1234567890" className="text-white font-light hover:text-gray-300 transition-colors">
-                        +1 (234) 567-890
+                        84472 40544
                       </a>
                     </div>
                   </div>

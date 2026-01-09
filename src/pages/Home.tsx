@@ -1,6 +1,32 @@
 import { Building2, Utensils, Gem, Globe, Sparkles } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
+import Tilt from 'react-parallax-tilt';
 import { Reveal } from '../components/Reveal';
+import Marquee from '../components/Marquee';
+
+// Parallax Image Helper Component
+function ParallaxImage({ src, alt }: { src: string; alt: string }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  });
+  
+  const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+
+  return (
+    <div ref={ref} className="relative w-full h-full overflow-hidden rounded-sm border border-white/10 group">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10 pointer-events-none"></div>
+      <motion.img 
+        src={src}
+        alt={alt}
+        style={{ y }}
+        className="w-full h-[120%] object-cover opacity-80 transition-opacity duration-700 group-hover:opacity-100"
+      />
+    </div>
+  );
+}
 
 export default function Home() {
   const services = [
@@ -33,24 +59,12 @@ export default function Home() {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { 
-        duration: 0.6, 
-        ease: [0.21, 0.47, 0.32, 0.98] as const 
-      }
-    }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] as const } }
   };
 
   return (
@@ -89,9 +103,55 @@ export default function Home() {
         </div>
       </section>
 
+      {/* VISION SECTION */}
+      <section className="py-32 px-6 lg:px-8 border-t border-white/10">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+             <div>
+                <Reveal>
+                  <p className="text-sm text-gray-500 font-light tracking-widest uppercase mb-4">Our Vision</p>
+                  <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight">
+                    Driving growth through data & creativity
+                  </h2>
+                </Reveal>
+                <Reveal delay={0.2}>
+                  <p className="text-xl text-gray-400 font-light leading-relaxed">
+                    To become the most trusted and result-driven marketing partner for real estate brands, empowering developers to reach the right buyers, maximize visibility, and accelerate sales through innovative, data-driven, and creative strategies.
+                  </p>
+                </Reveal>
+             </div>
+
+             <Reveal delay={0.4}>
+                <div className="aspect-[4/5]">
+                  <ParallaxImage 
+                    src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80"
+                    alt="Modern Glass Architecture"
+                  />
+                </div>
+             </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* MARQUEE SECTION */}
+      <Marquee />
+
       {/* SERVICES SECTION */}
       <section className="py-20 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
+          <div className="mb-16 text-center">
+             <Reveal>
+               <h2 className="text-4xl md:text-5xl font-light tracking-tight">What we do?</h2>
+               <motion.div 
+                 initial={{ width: 0 }}
+                 whileInView={{ width: "100px" }}
+                 viewport={{ once: true }}
+                 transition={{ delay: 0.5, duration: 0.8 }}
+                 className="h-[1px] bg-white/50 mx-auto mt-6"
+               />
+             </Reveal>
+          </div>
+
           <motion.div 
             variants={containerVariants}
             initial="hidden"
@@ -100,33 +160,36 @@ export default function Home() {
             className="grid md:grid-cols-2 gap-8 lg:gap-12"
           >
             {services.map((service, index) => (
-              <motion.div 
-                key={index} 
-                variants={itemVariants} 
-                className="group p-8 border border-white/10 rounded-sm hover:bg-white transition-colors duration-300 cursor-default"
-              >
-                <div className="mb-6 overflow-hidden">
-                  <motion.div
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ duration: 0.3 }}
-                    className="inline-block"
-                  >
-                    <service.icon className="w-12 h-12 text-white/80 stroke-[1.5] group-hover:text-black transition-colors duration-300" />
-                  </motion.div>
-                </div>
-                <h3 className="text-3xl font-light mb-4 tracking-tight group-hover:text-black transition-colors duration-300">
-                    {service.title}
-                </h3>
-                <p className="text-gray-400 leading-relaxed font-light text-lg group-hover:text-black/70 transition-colors duration-300">
-                  {service.description}
-                </p>
+              <motion.div key={index} variants={itemVariants} className="h-full">
+                <Tilt
+                  tiltMaxAngleX={3}
+                  tiltMaxAngleY={3}
+                  perspective={1000}
+                  scale={1.02}
+                  transitionSpeed={1000}
+                  className="h-full"
+                >
+                  <div className="group p-8 border border-white/10 rounded-sm hover:bg-white transition-colors duration-300 cursor-default relative overflow-hidden h-full">
+                    <div className="mb-6 overflow-hidden">
+                      <motion.div transition={{ duration: 0.3 }} className="inline-block">
+                        <service.icon className="w-12 h-12 text-white/80 stroke-[1.5] group-hover:text-black transition-colors duration-300" />
+                      </motion.div>
+                    </div>
+                    <h3 className="text-3xl font-light mb-4 tracking-tight group-hover:text-black transition-colors duration-300">
+                        {service.title}
+                    </h3>
+                    <p className="text-gray-400 leading-relaxed font-light text-lg group-hover:text-black/70 transition-colors duration-300">
+                      {service.description}
+                    </p>
+                  </div>
+                </Tilt>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* PRECISION SECTION (With New Image) */}
+      {/* PRECISION SECTION */}
       <section className="py-32 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -149,21 +212,11 @@ export default function Home() {
             </div>
             
             <Reveal delay={0.4}>
-              <div className="relative group cursor-pointer overflow-hidden rounded-sm">
-                {/* Decorative blur glow behind the image */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-white/20 to-gray-800/20 blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
-                
-                <div className="relative aspect-[4/5] bg-gray-900 border border-white/10 rounded-sm overflow-hidden">
-                  <motion.img 
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.7, ease: "easeOut" }}
-                    src="https://images.unsplash.com/photo-1600607686527-6fb886090705?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80"
-                    alt="Abstract architectural geometry" 
-                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700"
-                  />
-                  {/* Subtle overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
-                </div>
+              <div className="aspect-[4/5]">
+                <ParallaxImage 
+                  src="https://images.unsplash.com/photo-1600607686527-6fb886090705?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80"
+                  alt="Abstract architectural geometry" 
+                />
               </div>
             </Reveal>
           </div>
@@ -197,12 +250,8 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 text-sm font-light">© 2024 digisouq. All rights reserved.</p>
             <div className="flex gap-8">
-              <a href="/about" className="text-gray-500 text-sm font-light hover:text-white transition-colors">
-                About
-              </a>
-              <a href="/contact" className="text-gray-500 text-sm font-light hover:text-white transition-colors">
-                Contact
-              </a>
+              <a href="/about" className="text-gray-500 text-sm font-light hover:text-white transition-colors">About</a>
+              <a href="/contact" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Contact</a>
             </div>
           </div>
         </div>

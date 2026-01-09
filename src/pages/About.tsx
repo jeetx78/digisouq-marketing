@@ -1,7 +1,7 @@
-// src/pages/About.tsx
 import { Target, Users, Lightbulb, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Reveal } from '../components/Reveal';
+import { Counter } from '../components/Counter';
 
 export default function About() {
   const values = [
@@ -29,19 +29,12 @@ export default function About() {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] as const }
-    }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] as const } }
   };
 
   return (
@@ -148,7 +141,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* EXPERTISE SECTION */}
+      {/* EXPERTISE SECTION (With Animated Counters) */}
       <section className="py-32 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mx-auto text-center">
@@ -165,17 +158,10 @@ export default function About() {
             
             <Reveal delay={0.4}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                {[
-                  { num: '50+', label: 'Projects Delivered' },
-                  { num: '15+', label: 'Team Members' },
-                  { num: '98%', label: 'Client Satisfaction' },
-                  { num: '24/7', label: 'Support Available' }
-                ].map((stat, i) => (
-                  <div key={i}>
-                    <p className="text-4xl font-light mb-2">{stat.num}</p>
-                    <p className="text-sm text-gray-500 font-light">{stat.label}</p>
-                  </div>
-                ))}
+                <Counter value={50} label="Projects Delivered" suffix="+" />
+                <Counter value={15} label="Team Members" suffix="+" />
+                <Counter value={98} label="Client Satisfaction" suffix="%" />
+                <Counter value={24} label="Support Available" suffix="/7" />
               </div>
             </Reveal>
           </div>
@@ -209,12 +195,8 @@ export default function About() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 text-sm font-light">© 2024 digisouq. All rights reserved.</p>
             <div className="flex gap-8">
-              <a href="/" className="text-gray-500 text-sm font-light hover:text-white transition-colors">
-                Home
-              </a>
-              <a href="/contact" className="text-gray-500 text-sm font-light hover:text-white transition-colors">
-                Contact
-              </a>
+              <a href="/" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Home</a>
+              <a href="/contact" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Contact</a>
             </div>
           </div>
         </div>
