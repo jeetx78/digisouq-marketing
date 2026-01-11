@@ -1,31 +1,20 @@
-import { 
-  Building2, 
-  Utensils, 
-  Gem, 
-  Globe, 
-  Sparkles 
-} from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
-import Tilt from 'react-parallax-tilt';
+import { useRef, useState, useEffect } from 'react';
 import { Reveal } from '../components/Reveal';
 import Marquee from '../components/Marquee';
 import { Link } from 'react-router-dom';
 
-// Parallax Image Helper Component
+// Parallax Image Helper
 function ParallaxImage({ src, alt }: { src: string; alt: string }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   });
-  
-  // Parallax effect: moves image vertically as you scroll
   const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
   return (
     <div ref={ref} className="relative w-full h-full overflow-hidden rounded-sm border border-white/10 group">
-      {/* Dark gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10 pointer-events-none"></div>
       <motion.img 
         src={src}
@@ -37,45 +26,152 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
+// NEW: Card Component for the Carousel
+function ServiceCard({ service, isActive, onClick }: { service: any, isActive: boolean, onClick: () => void }) {
+  return (
+    <div 
+      onClick={onClick}
+      className={`
+        relative shrink-0 cursor-pointer transition-all duration-500 ease-out
+        ${isActive ? 'w-[350px] md:w-[450px] scale-100 opacity-100 z-10' : 'w-[300px] md:w-[350px] scale-90 opacity-60 grayscale-[50%] z-0'}
+      `}
+    >
+      <div className={`
+        bg-white text-black rounded-[2rem] p-4 flex flex-col h-[600px] shadow-2xl overflow-hidden
+        ${isActive ? 'shadow-white/10' : ''}
+      `}>
+        {/* Image Area */}
+        <div className="h-[60%] w-full rounded-[1.5rem] overflow-hidden mb-6 bg-gray-100 relative">
+           <img 
+             src={service.img} 
+             alt={service.title} 
+             className="w-full h-full object-cover"
+             draggable="false"
+           />
+           {/* Shine effect for active card */}
+           {isActive && (
+             <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent pointer-events-none mix-blend-overlay"></div>
+           )}
+        </div>
+
+        {/* Text Area */}
+        <div className="flex flex-col flex-grow px-2 pb-4 text-center md:text-left">
+          <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">{service.title}</h3>
+          <p className="text-gray-600 font-light leading-relaxed text-sm md:text-base line-clamp-5">
+            {service.desc}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
-  // INDUSTRY SERVICES (Reverted to original list as requested)
-  const services = [
+  const sliderServices = [
     {
-      icon: Building2,
-      title: 'Real Estate Marketing',
-      description: 'Elevate your property listings with strategic campaigns that capture attention and drive qualified leads.',
+      id: 1,
+      title: "Product Brochures",
+      desc: "Elegant brochures showcasing your property's location, floor plans, and amenities, designed to leave a lasting impression.",
+      img: "/pb.jpg"
     },
     {
-      icon: Utensils,
-      title: 'Restaurant Marketing',
-      description: 'Transform your culinary brand with compelling storytelling and digital strategies that fill tables.',
+      id: 2,
+      title: "Branding Strategy",
+      desc: "Where precision meets distinction. We craft unparalleled brand narratives and visual identities, ensuring unwavering consistency.",
+      img: "/images.jpg"
     },
     {
-      icon: Gem,
-      title: 'Beauty Marketing',
-      description: 'Showcase elegance and style with captivating visuals that define your brand and attract a loyal following.',
+      id: 3,
+      title: "Digital Creatives",
+      desc: "Compelling social posts, ads, videos, and landing pages that build trust, capture attention, and generate leads.",
+      img: "/dc.jpg"
     },
     {
-      icon: Globe,
-      title: 'Website Development',
-      description: 'Craft premium digital experiences with clean, functional websites that convert visitors into customers.',
+      id: 4,
+      title: "Website Development",
+      desc: "From dynamic WordPress sites to high-end custom experiences—we build flexible, secure, and user-friendly platforms.",
+      img: "/fd.jpg"
     },
     {
-      icon: Sparkles,
-      title: 'AI Automation',
-      description: 'Streamline operations and enhance efficiency with intelligent automation solutions tailored to your business.',
+      id: 5,
+      title: "Social Media Marketing",
+      desc: "Boost your online presence with strategic marketing. We craft tailored campaigns for genuine engagement.",
+      img: "/smm.jpg"
     },
+    {
+      id: 6,
+      title: "Research & Story",
+      desc: "To lead the market, you must understand it. We continuously monitor trends to refine your brand's positioning.",
+      img: "/bs.jpg"
+    },
+    {
+      id: 7,
+      title: "Photography & Videos",
+      desc: "A visual journey where every click is an artful expression. Transforming moments into immersive experiences.",
+      img: "/fv.jpeg"
+    },
+    {
+      id: 8,
+      title: "AI Automation",
+      desc: "Streamline operations and enhance efficiency with intelligent automation solutions tailored to your business.",
+      img: "/ai.png"
+    }
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+  // Logic to track active center card
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Handle scroll to detect which item is in the center
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    
+    const container = scrollRef.current;
+    const centerPoint = container.scrollLeft + (container.clientWidth / 2);
+    
+    // Find the child closest to the center point
+    const children = Array.from(container.children) as HTMLElement[];
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    children.forEach((child, index) => {
+      // Logic: Child Center = Child Left Offset + (Child Width / 2)
+      // Note: offsetLeft is relative to the parent because of 'relative' positioning in parent
+      const childCenter = child.offsetLeft + (child.clientWidth / 2);
+      const distance = Math.abs(childCenter - centerPoint);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    setActiveIndex(closestIndex);
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] as const } }
+  // Click to center a card
+  const scrollToCard = (index: number) => {
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const children = Array.from(container.children) as HTMLElement[];
+    const target = children[index];
+    
+    // Calculate scroll position to center the target
+    const scrollPos = target.offsetLeft - (container.clientWidth / 2) + (target.clientWidth / 2);
+    
+    container.scrollTo({
+      left: scrollPos,
+      behavior: 'smooth'
+    });
   };
+
+  // Center the initial card on load
+  useEffect(() => {
+    // Small timeout to ensure render is complete
+    setTimeout(() => {
+       scrollToCard(0);
+    }, 100);
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -113,7 +209,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* VISION SECTION (With Graph Image) */}
+      {/* VISION SECTION */}
       <section className="py-32 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -128,15 +224,11 @@ export default function Home() {
                   <p className="text-xl text-gray-400 font-light leading-relaxed mb-6">
                     We go beyond just "making ads." We tackle every aspect of your brand narrative—from visual identity and influencer collaboration to high-end photography and strategic positioning.
                   </p>
-                  <p className="text-xl text-gray-400 font-light leading-relaxed">
-                    Based on deep market insights, we develop comprehensive strategies that resonate with your target audience and foster genuine trust.
-                  </p>
                 </Reveal>
              </div>
 
              <Reveal delay={0.4}>
                 <div className="aspect-[4/5]">
-                  {/* UPDATED: Uses your Graph image */}
                   <ParallaxImage 
                     src="/istockphoto-539953664-612x612.jpg"
                     alt="Strategic Growth Graph"
@@ -150,60 +242,43 @@ export default function Home() {
       {/* MARQUEE SECTION */}
       <Marquee />
 
-      {/* SERVICES SECTION (Industries We Serve) */}
-      <section className="py-20 px-6 lg:px-8 border-t border-white/10">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-16 text-center">
+      {/* NEW: CENTER-FOCUSED CAROUSEL */}
+      <section className="py-24 border-t border-white/10 overflow-hidden bg-black relative">
+        <div className="px-6 lg:px-8 mb-12 relative z-10">
+           <div className="max-w-7xl mx-auto text-center">
              <Reveal>
-               <h2 className="text-4xl md:text-5xl font-light tracking-tight">Industries We Serve</h2>
-               <motion.div 
-                 initial={{ width: 0 }}
-                 whileInView={{ width: "100px" }}
-                 viewport={{ once: true }}
-                 transition={{ delay: 0.5, duration: 0.8 }}
-                 className="h-[1px] bg-white/50 mx-auto mt-6"
-               />
+               <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-4">Our Services</h2>
+               <p className="text-gray-400">Swipe to explore</p>
              </Reveal>
-          </div>
+           </div>
+        </div>
 
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {services.map((service, index) => (
-              <motion.div key={index} variants={itemVariants} className="h-full">
-                <Tilt
-                  tiltMaxAngleX={3}
-                  tiltMaxAngleY={3}
-                  perspective={1000}
-                  scale={1.02}
-                  transitionSpeed={1000}
-                  className="h-full"
-                >
-                  <div className="group p-8 border border-white/10 rounded-sm hover:bg-white transition-colors duration-300 cursor-default relative overflow-hidden h-full flex flex-col">
-                    <div className="mb-6 overflow-hidden">
-                      <motion.div transition={{ duration: 0.3 }} className="inline-block">
-                        <service.icon className="w-12 h-12 text-white/80 stroke-[1.5] group-hover:text-black transition-colors duration-300" />
-                      </motion.div>
-                    </div>
-                    <h3 className="text-2xl font-light mb-4 tracking-tight group-hover:text-black transition-colors duration-300">
-                        {service.title}
-                    </h3>
-                    <p className="text-gray-400 leading-relaxed font-light text-sm group-hover:text-black/70 transition-colors duration-300 flex-grow">
-                      {service.description}
-                    </p>
-                  </div>
-                </Tilt>
-              </motion.div>
-            ))}
-          </motion.div>
+        {/* Scroll Container */}
+        <div 
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex overflow-x-auto gap-4 px-[50vw] pb-12 snap-x snap-mandatory scrollbar-hide items-center"
+          style={{ 
+            scrollbarWidth: 'none', 
+            msOverflowStyle: 'none',
+            // Padding-left is 50vw to center the first item initially
+            paddingLeft: '50vw',
+            paddingRight: '50vw'
+          }}
+        >
+          {sliderServices.map((service, index) => (
+            <div key={service.id} className="snap-center">
+              <ServiceCard 
+                service={service} 
+                isActive={index === activeIndex} 
+                onClick={() => scrollToCard(index)}
+              />
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* PRECISION SECTION (With Camera Image) */}
+      {/* PRECISION SECTION */}
       <section className="py-32 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -218,16 +293,10 @@ export default function Home() {
                   Whether it's an individual session, a corporate event, or a product showcase, we are dedicated to creating beautiful and memorable images that you will cherish.
                 </p>
               </Reveal>
-              <Reveal delay={0.3}>
-                <p className="text-xl text-gray-400 font-light leading-relaxed">
-                  Our team consists of experienced professionals passionate about their craft, ensuring every project is delivered with excellence and a personalized touch.
-                </p>
-              </Reveal>
             </div>
             
             <Reveal delay={0.4}>
               <div className="aspect-[4/5]">
-                {/* UPDATED: Uses your Camera image */}
                 <ParallaxImage 
                   src="/pg.jpg"
                   alt="Professional Photography" 
@@ -245,9 +314,6 @@ export default function Home() {
             <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6">
               Ready to tell your story?
             </h2>
-            <p className="text-xl text-gray-400 font-light mb-12 max-w-2xl mx-auto">
-              Let's collaborate to define your brand's essence.
-            </p>
             <Link to="/contact">
               <motion.button
                 whileHover={{ scale: 1.05 }}

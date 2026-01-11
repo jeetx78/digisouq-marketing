@@ -1,69 +1,142 @@
-import { 
-  BookOpen, 
-  Palette, 
-  PenTool, 
-  Globe, 
-  Share2, 
-  Search, 
-  Camera, 
-  ArrowRight,
-  Layers,
-  LineChart
-} from 'lucide-react';
-import { motion } from 'framer-motion';
-import Tilt from 'react-parallax-tilt';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
+import { Search, Layers, LineChart } from 'lucide-react'; // Icons for the process section
 import { Reveal } from '../components/Reveal';
 import { Link } from 'react-router-dom';
 
+// 1. Reusable Card Component (Same as Home)
+function ServiceCard({ service, isActive, onClick }: { service: any, isActive: boolean, onClick: () => void }) {
+  return (
+    <div 
+      onClick={onClick}
+      className={`
+        relative shrink-0 cursor-pointer transition-all duration-500 ease-out
+        ${isActive ? 'w-[350px] md:w-[450px] scale-100 opacity-100 z-10' : 'w-[300px] md:w-[350px] scale-90 opacity-60 grayscale-[50%] z-0'}
+      `}
+    >
+      <div className={`
+        bg-white text-black rounded-[2rem] p-4 flex flex-col h-[600px] shadow-2xl overflow-hidden
+        ${isActive ? 'shadow-white/10' : ''}
+      `}>
+        {/* Image Area */}
+        <div className="h-[60%] w-full rounded-[1.5rem] overflow-hidden mb-6 bg-gray-100 relative">
+           <img 
+             src={service.img} 
+             alt={service.title} 
+             className="w-full h-full object-cover"
+             draggable="false"
+           />
+           {/* Shine effect for active card */}
+           {isActive && (
+             <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent pointer-events-none mix-blend-overlay"></div>
+           )}
+        </div>
+
+        {/* Text Area */}
+        <div className="flex flex-col flex-grow px-2 pb-4 text-center md:text-left">
+          <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">{service.title}</h3>
+          <p className="text-gray-600 font-light leading-relaxed text-sm md:text-base line-clamp-5">
+            {service.desc}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Services() {
-  // detailed services based on Proposal PDF Content
-  const services = [
+  // 2. Data with Images
+  const sliderServices = [
     {
-      icon: BookOpen,
-      title: 'Project Brochures',
-      description: 'Elegant brochures showcasing your property\'s location, floor plans, amenities, and lifestyle. We design tangible assets that leave a lasting impression and drive engagement for real estate developers.',
+      id: 1,
+      title: "Product Brochures",
+      desc: "Elegant brochures showcasing your property's location, floor plans, and amenities, designed to leave a lasting impression.",
+      img: "/pb.jpg"
     },
     {
-      icon: Palette,
-      title: 'Branding Strategy',
-      description: 'Your visual identity is the soul of your business. We craft impactful logos and develop cohesive visuals that tell your story, build trust, and make your brand stand out in a competitive market.',
+      id: 2,
+      title: "Branding Strategy",
+      desc: "Where precision meets distinction. We craft unparalleled brand narratives and visual identities, ensuring unwavering consistency.",
+      img: "/images.jpg"
     },
     {
-      icon: PenTool,
-      title: 'Digital Creatives',
-      description: 'Compelling online visuals—social posts, ads, videos, and landing pages—that build brand trust, capture attention, and generate leads across all digital touchpoints.',
+      id: 3,
+      title: "Digital Creatives",
+      desc: "Compelling social posts, ads, videos, and landing pages that build trust, capture attention, and generate leads.",
+      img: "/dc.jpg"
     },
     {
-      icon: Globe,
-      title: 'Website Development',
-      description: 'We build dynamic WordPress sites for easy content management, fast static websites for performance, and high-end custom web experiences with advanced animations to make a powerful brand statement.',
+      id: 4,
+      title: "Website Development",
+      desc: "From dynamic WordPress sites to high-end custom experiences—we build flexible, secure, and user-friendly platforms.",
+      img: "/fd.jpg"
     },
     {
-      icon: Share2,
-      title: 'Social Media Marketing',
-      description: 'Build brand personality and drive direct customer engagement. We manage your presence on Instagram, Facebook, and YouTube to drive website traffic and build a loyal community.',
+      id: 5,
+      title: "Social Media Marketing",
+      desc: "Boost your online presence with strategic marketing. We craft tailored campaigns for genuine engagement.",
+      img: "/smm.jpg"
     },
     {
-      icon: Search,
-      title: 'Research & Story',
-      description: 'To lead the market, you must understand it. We continuously monitor competitors and industry trends to refine your positioning and narrative, keeping you one step ahead.',
+      id: 6,
+      title: "Research & Story",
+      desc: "To lead the market, you must understand it. We continuously monitor trends to refine your brand's positioning.",
+      img: "/bs.jpg"
     },
     {
-      icon: Camera,
-      title: 'Photography & Videos',
-      description: 'High-quality visuals are essential. We produce a suite of professional photos and videos designed to showcase your offerings and tell your brand\'s story in a visually stunning way.',
+      id: 7,
+      title: "Photography & Videos",
+      desc: "A visual journey where every click is an artful expression. Transforming moments into immersive experiences.",
+      img: "/fv.jpeg"
     },
+    {
+      id: 8,
+      title: "AI Automation",
+      desc: "Streamline operations and enhance efficiency with intelligent automation solutions tailored to your business.",
+      img: "/ai.png"
+    }
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  // 3. Scroll & Snap Logic
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const centerPoint = container.scrollLeft + (container.clientWidth / 2);
+    
+    const children = Array.from(container.children) as HTMLElement[];
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    children.forEach((child, index) => {
+      const childCenter = child.offsetLeft + (child.clientWidth / 2);
+      const distance = Math.abs(childCenter - centerPoint);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    setActiveIndex(closestIndex);
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  const scrollToCard = (index: number) => {
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const children = Array.from(container.children) as HTMLElement[];
+    const target = children[index];
+    const scrollPos = target.offsetLeft - (container.clientWidth / 2) + (target.clientWidth / 2);
+    
+    container.scrollTo({ left: scrollPos, behavior: 'smooth' });
   };
+
+  // Center initial card
+  useEffect(() => {
+    setTimeout(() => scrollToCard(0), 100);
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -101,56 +174,42 @@ export default function Services() {
         </div>
       </section>
 
-      {/* SERVICES GRID (The "Boxes Type Nav") */}
-      <section className="py-20 px-6 lg:px-8 border-t border-white/10">
-        <div className="max-w-7xl mx-auto">
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {services.map((service, index) => (
-              <motion.div key={index} variants={itemVariants} className="h-full">
-                <Tilt
-                  tiltMaxAngleX={2}
-                  tiltMaxAngleY={2}
-                  perspective={1000}
-                  scale={1.01}
-                  transitionSpeed={1000}
-                  className="h-full"
-                >
-                  <div className="group p-8 border border-white/10 rounded-sm hover:bg-white transition-colors duration-500 cursor-default relative overflow-hidden h-full flex flex-col min-h-[320px]">
-                    {/* Icon */}
-                    <div className="mb-6">
-                      <div className="inline-block p-3 border border-white/10 rounded-sm group-hover:border-black/10 transition-colors duration-500">
-                        <service.icon className="w-8 h-8 text-white stroke-[1.5] group-hover:text-black transition-colors duration-500" />
-                      </div>
-                    </div>
-                    
-                    {/* Title */}
-                    <h3 className="text-2xl font-light mb-4 tracking-tight group-hover:text-black transition-colors duration-500">
-                        {service.title}
-                    </h3>
-                    
-                    {/* Description */}
-                    <p className="text-gray-400 leading-relaxed font-light text-sm group-hover:text-black/70 transition-colors duration-500 flex-grow">
-                      {service.description}
-                    </p>
+      {/* CAROUSEL SECTION */}
+      <section className="py-24 border-t border-white/10 overflow-hidden bg-black relative">
+        <div className="px-6 lg:px-8 mb-12 relative z-10">
+           <div className="max-w-7xl mx-auto text-center">
+             <Reveal>
+               <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-4">What we do</h2>
+               <p className="text-gray-400">Swipe to explore our services</p>
+             </Reveal>
+           </div>
+        </div>
 
-                    {/* Arrow Indicator (adds to the "Nav" feel) */}
-                    <div className="mt-8 flex justify-end">
-                       <ArrowRight className="w-6 h-6 text-transparent -translate-x-4 group-hover:text-black group-hover:translate-x-0 transition-all duration-500" />
-                    </div>
-                  </div>
-                </Tilt>
-              </motion.div>
-            ))}
-          </motion.div>
+        {/* Scroll Container */}
+        <div 
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex overflow-x-auto gap-4 px-[50vw] pb-12 snap-x snap-mandatory scrollbar-hide items-center"
+          style={{ 
+            scrollbarWidth: 'none', 
+            msOverflowStyle: 'none',
+            paddingLeft: '50vw',
+            paddingRight: '50vw'
+          }}
+        >
+          {sliderServices.map((service, index) => (
+            <div key={service.id} className="snap-center">
+              <ServiceCard 
+                service={service} 
+                isActive={index === activeIndex} 
+                onClick={() => scrollToCard(index)}
+              />
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* PROCESS SECTION (Holistic Approach) */}
+      {/* PROCESS SECTION (Unique to Services Page) */}
       <section className="py-32 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 lg:gap-24 items-start">

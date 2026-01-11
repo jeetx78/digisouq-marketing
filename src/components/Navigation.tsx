@@ -32,9 +32,17 @@ export default function Navigation() {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link to="/" className="text-white text-2xl font-light tracking-wider hover:opacity-80 transition-opacity">
-            digisouq
+          
+          {/* LOGO + TEXT SECTION */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <img 
+              src="/logo.png" 
+              alt="Digisouq Logo" 
+              className="h-10 w-auto object-contain" // Adjust h-10 to h-12 if you want it bigger
+            />
+            <span className="text-white text-2xl font-light tracking-wider group-hover:opacity-80 transition-opacity">
+              digisouq
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -76,8 +84,7 @@ export default function Navigation() {
             </Link>
           </div>
 
-          {/* Mobile Menu Button (Simple Placeholder) */}
-          {/* If you need a full mobile menu later, we can add a state toggle here */}
+          {/* Mobile Menu Placeholder */}
           <div className="md:hidden">
             <Link to="/contact" className="text-sm font-light text-white">
               Menu
