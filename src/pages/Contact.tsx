@@ -1,4 +1,3 @@
-// src/pages/Contact.tsx
 import { useState } from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -48,14 +47,6 @@ export default function Contact() {
               <br />
               <span className="italic font-extralight text-gray-300">something great.</span>
             </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-xl md:text-2xl text-gray-400 font-light leading-relaxed"
-            >
-              Have a project in mind? We'd love to hear about it. Share your vision and let's explore how we can bring it to life.
-            </motion.p>
           </div>
         </div>
       </section>
@@ -64,7 +55,7 @@ export default function Contact() {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-5 gap-16 lg:gap-24">
             
-            {/* CONTACT INFO */}
+            {/* CONTACT INFO (Updated from PDF Page 9) */}
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -88,8 +79,8 @@ export default function Contact() {
                     <Phone className="w-5 h-5 text-gray-500 mt-1 stroke-[1.5]" />
                     <div>
                       <p className="text-sm text-gray-500 font-light mb-1">Phone</p>
-                      <a href="tel:+1234567890" className="text-white font-light hover:text-gray-300 transition-colors">
-                        84472 40544
+                      <a href="tel:8447240544" className="text-white font-light hover:text-gray-300 transition-colors">
+                        73891 65536 <br /> 84472 40544
                       </a>
                     </div>
                   </div>
@@ -98,29 +89,13 @@ export default function Contact() {
                     <div>
                       <p className="text-sm text-gray-500 font-light mb-1">Office</p>
                       <p className="text-white font-light">
-                        123 Business District
+                        Tower B 1408, 14th Floor
                         <br />
-                        Dubai, UAE
+                        Bhutani Alphathum, Sector 90
+                        <br />
+                        Noida, Uttar Pradesh 201304
                       </p>
                     </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-light tracking-tight mb-4">Business Hours</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 font-light">Monday - Friday</span>
-                    <span className="text-white font-light">9:00 - 18:00</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 font-light">Saturday</span>
-                    <span className="text-white font-light">10:00 - 14:00</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 font-light">Sunday</span>
-                    <span className="text-white font-light">Closed</span>
                   </div>
                 </div>
               </div>
@@ -137,9 +112,7 @@ export default function Contact() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-light text-gray-400 mb-2">
-                      Name *
-                    </label>
+                    <label htmlFor="name" className="block text-sm font-light text-gray-400 mb-2">Name *</label>
                     <input
                       type="text"
                       id="name"
@@ -151,9 +124,7 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-light text-gray-400 mb-2">
-                      Email *
-                    </label>
+                    <label htmlFor="email" className="block text-sm font-light text-gray-400 mb-2">Email *</label>
                     <input
                       type="email"
                       id="email"
@@ -168,9 +139,7 @@ export default function Contact() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="company" className="block text-sm font-light text-gray-400 mb-2">
-                      Company
-                    </label>
+                    <label htmlFor="company" className="block text-sm font-light text-gray-400 mb-2">Company</label>
                     <input
                       type="text"
                       id="company"
@@ -181,32 +150,27 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="service" className="block text-sm font-light text-gray-400 mb-2">
-                      Service Interested In
-                    </label>
+                    <label htmlFor="service" className="block text-sm font-light text-gray-400 mb-2">Service</label>
                     <select
                       id="service"
                       name="service"
                       value={formData.service}
                       onChange={handleChange}
-                      // Added [&>option]:bg-black to ensure dropdown options have a black background
                       className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white font-light focus:outline-none focus:border-white/30 transition-colors [&>option]:bg-black"
                     >
                       <option value="">Select a service</option>
-                      <option value="real-estate">Real Estate Marketing</option>
-                      <option value="restaurant">Restaurant Marketing</option>
-                      <option value="beauty">Beauty Marketing</option>
+                      <option value="branding">Branding Strategy</option>
+                      <option value="creatives">Digital Creatives</option>
                       <option value="website">Website Development</option>
-                      <option value="ai">AI Automation</option>
-                      <option value="other">Other</option>
+                      <option value="social">Social Media</option>
+                      <option value="research">Research & Story</option>
+                      <option value="photo-video">Photography & Videos</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-light text-gray-400 mb-2">
-                    Message *
-                  </label>
+                  <label htmlFor="message" className="block text-sm font-light text-gray-400 mb-2">Message *</label>
                   <textarea
                     id="message"
                     name="message"
@@ -237,12 +201,9 @@ export default function Contact() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 text-sm font-light">© 2024 digisouq. All rights reserved.</p>
             <div className="flex gap-8">
-              <a href="/" className="text-gray-500 text-sm font-light hover:text-white transition-colors">
-                Home
-              </a>
-              <a href="/about" className="text-gray-500 text-sm font-light hover:text-white transition-colors">
-                About
-              </a>
+              <a href="/" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Home</a>
+              <a href="/about" className="text-gray-500 text-sm font-light hover:text-white transition-colors">About</a>
+              <a href="/contact" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Contact</a>
             </div>
           </div>
         </div>

@@ -1,9 +1,16 @@
-import { Building2, Utensils, Gem, Globe, Sparkles } from 'lucide-react';
+import { 
+  Building2, 
+  Utensils, 
+  Gem, 
+  Globe, 
+  Sparkles 
+} from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Tilt from 'react-parallax-tilt';
 import { Reveal } from '../components/Reveal';
 import Marquee from '../components/Marquee';
+import { Link } from 'react-router-dom';
 
 // Parallax Image Helper Component
 function ParallaxImage({ src, alt }: { src: string; alt: string }) {
@@ -13,10 +20,12 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
     offset: ["start end", "end start"]
   });
   
+  // Parallax effect: moves image vertically as you scroll
   const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
   return (
     <div ref={ref} className="relative w-full h-full overflow-hidden rounded-sm border border-white/10 group">
+      {/* Dark gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10 pointer-events-none"></div>
       <motion.img 
         src={src}
@@ -29,6 +38,7 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
 }
 
 export default function Home() {
+  // INDUSTRY SERVICES (Reverted to original list as requested)
   const services = [
     {
       icon: Building2,
@@ -79,7 +89,7 @@ export default function Home() {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="text-6xl md:text-8xl font-light tracking-tight mb-8 leading-none"
             >
-              Marketing that
+              Beyond traditional
               <br />
               <motion.span 
                 initial={{ opacity: 0, x: -20 }}
@@ -87,7 +97,7 @@ export default function Home() {
                 transition={{ delay: 0.4, duration: 0.8 }}
                 className="italic font-extralight text-gray-300 block mt-2"
               >
-                moves minds.
+                branding agencies.
               </motion.span>
             </motion.h1>
             
@@ -97,35 +107,39 @@ export default function Home() {
               transition={{ delay: 0.6, duration: 0.8 }}
               className="text-xl md:text-2xl text-gray-400 font-light leading-relaxed max-w-2xl"
             >
-              We blend strategic thinking with creative execution to help your business stand out in the digital marketplace.
+              We are strategic partners who collaborate with you to define your core values and tell your story through holistic, visual creativity.
             </motion.p>
           </div>
         </div>
       </section>
 
-      {/* VISION SECTION */}
+      {/* VISION SECTION (With Graph Image) */}
       <section className="py-32 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
              <div>
                 <Reveal>
-                  <p className="text-sm text-gray-500 font-light tracking-widest uppercase mb-4">Our Vision</p>
+                  <p className="text-sm text-gray-500 font-light tracking-widest uppercase mb-4">Our Approach</p>
                   <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight">
-                    Driving growth through data & creativity
+                    A holistic approach to your brand story
                   </h2>
                 </Reveal>
                 <Reveal delay={0.2}>
+                  <p className="text-xl text-gray-400 font-light leading-relaxed mb-6">
+                    We go beyond just "making ads." We tackle every aspect of your brand narrative—from visual identity and influencer collaboration to high-end photography and strategic positioning.
+                  </p>
                   <p className="text-xl text-gray-400 font-light leading-relaxed">
-                    To become the most trusted and result-driven marketing partner for real estate brands, empowering developers to reach the right buyers, maximize visibility, and accelerate sales through innovative, data-driven, and creative strategies.
+                    Based on deep market insights, we develop comprehensive strategies that resonate with your target audience and foster genuine trust.
                   </p>
                 </Reveal>
              </div>
 
              <Reveal delay={0.4}>
                 <div className="aspect-[4/5]">
+                  {/* UPDATED: Uses your Graph image */}
                   <ParallaxImage 
-                    src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80"
-                    alt="Modern Glass Architecture"
+                    src="/istockphoto-539953664-612x612.jpg"
+                    alt="Strategic Growth Graph"
                   />
                 </div>
              </Reveal>
@@ -136,12 +150,12 @@ export default function Home() {
       {/* MARQUEE SECTION */}
       <Marquee />
 
-      {/* SERVICES SECTION */}
+      {/* SERVICES SECTION (Industries We Serve) */}
       <section className="py-20 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 text-center">
              <Reveal>
-               <h2 className="text-4xl md:text-5xl font-light tracking-tight">What we do?</h2>
+               <h2 className="text-4xl md:text-5xl font-light tracking-tight">Industries We Serve</h2>
                <motion.div 
                  initial={{ width: 0 }}
                  whileInView={{ width: "100px" }}
@@ -157,7 +171,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="grid md:grid-cols-2 gap-8 lg:gap-12"
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {services.map((service, index) => (
               <motion.div key={index} variants={itemVariants} className="h-full">
@@ -169,16 +183,16 @@ export default function Home() {
                   transitionSpeed={1000}
                   className="h-full"
                 >
-                  <div className="group p-8 border border-white/10 rounded-sm hover:bg-white transition-colors duration-300 cursor-default relative overflow-hidden h-full">
+                  <div className="group p-8 border border-white/10 rounded-sm hover:bg-white transition-colors duration-300 cursor-default relative overflow-hidden h-full flex flex-col">
                     <div className="mb-6 overflow-hidden">
                       <motion.div transition={{ duration: 0.3 }} className="inline-block">
                         <service.icon className="w-12 h-12 text-white/80 stroke-[1.5] group-hover:text-black transition-colors duration-300" />
                       </motion.div>
                     </div>
-                    <h3 className="text-3xl font-light mb-4 tracking-tight group-hover:text-black transition-colors duration-300">
+                    <h3 className="text-2xl font-light mb-4 tracking-tight group-hover:text-black transition-colors duration-300">
                         {service.title}
                     </h3>
-                    <p className="text-gray-400 leading-relaxed font-light text-lg group-hover:text-black/70 transition-colors duration-300">
+                    <p className="text-gray-400 leading-relaxed font-light text-sm group-hover:text-black/70 transition-colors duration-300 flex-grow">
                       {service.description}
                     </p>
                   </div>
@@ -189,33 +203,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRECISION SECTION */}
+      {/* PRECISION SECTION (With Camera Image) */}
       <section className="py-32 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
               <Reveal>
                 <h2 className="text-5xl md:text-6xl font-light tracking-tight mb-8 leading-tight">
-                  Precision meets creativity
+                  Capturing moments with precision
                 </h2>
               </Reveal>
               <Reveal delay={0.2}>
                 <p className="text-xl text-gray-400 font-light leading-relaxed mb-8">
-                  At digisouq, we don't just follow trends—we set them. Our approach combines data-driven insights with bold creative vision to deliver campaigns that resonate and results that matter.
+                  Whether it's an individual session, a corporate event, or a product showcase, we are dedicated to creating beautiful and memorable images that you will cherish.
                 </p>
               </Reveal>
               <Reveal delay={0.3}>
                 <p className="text-xl text-gray-400 font-light leading-relaxed">
-                  Whether you're launching a new property, building a restaurant brand, or transforming your digital presence, we bring the expertise and innovation you need to succeed.
+                  Our team consists of experienced professionals passionate about their craft, ensuring every project is delivered with excellence and a personalized touch.
                 </p>
               </Reveal>
             </div>
             
             <Reveal delay={0.4}>
               <div className="aspect-[4/5]">
+                {/* UPDATED: Uses your Camera image */}
                 <ParallaxImage 
-                  src="https://images.unsplash.com/photo-1600607686527-6fb886090705?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80"
-                  alt="Abstract architectural geometry" 
+                  src="/pg.jpg"
+                  alt="Professional Photography" 
                 />
               </div>
             </Reveal>
@@ -228,19 +243,20 @@ export default function Home() {
         <Reveal>
           <div className="max-w-7xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6">
-              Ready to elevate your brand?
+              Ready to tell your story?
             </h2>
             <p className="text-xl text-gray-400 font-light mb-12 max-w-2xl mx-auto">
-              Let's discuss how we can help you achieve your marketing goals.
+              Let's collaborate to define your brand's essence.
             </p>
-            <motion.a
-              href="/contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-block px-8 py-4 bg-white text-black text-sm font-light tracking-wide hover:bg-gray-200 transition-colors"
-            >
-              Get in touch
-            </motion.a>
+            <Link to="/contact">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-block px-8 py-4 bg-white text-black text-sm font-light tracking-wide hover:bg-gray-200 transition-colors"
+              >
+                Get in touch
+              </motion.button>
+            </Link>
           </div>
         </Reveal>
       </section>
@@ -250,8 +266,8 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 text-sm font-light">© 2024 digisouq. All rights reserved.</p>
             <div className="flex gap-8">
-              <a href="/about" className="text-gray-500 text-sm font-light hover:text-white transition-colors">About</a>
-              <a href="/contact" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Contact</a>
+              <Link to="/about" className="text-gray-500 text-sm font-light hover:text-white transition-colors">About</Link>
+              <Link to="/contact" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Contact</Link>
             </div>
           </div>
         </div>

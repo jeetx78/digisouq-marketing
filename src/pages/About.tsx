@@ -2,28 +2,29 @@ import { Target, Users, Lightbulb, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Reveal } from '../components/Reveal';
 import { Counter } from '../components/Counter';
+import { Link } from 'react-router-dom';
 
 export default function About() {
   const values = [
     {
       icon: Target,
       title: 'Precision',
-      description: 'Every campaign is crafted with meticulous attention to detail and strategic focus.',
+      description: 'We are committed to creating beautiful, memorable images and campaigns with absolute attention to detail.',
     },
     {
       icon: Lightbulb,
-      title: 'Innovation',
-      description: 'We embrace cutting-edge technology and creative thinking to deliver breakthrough solutions.',
+      title: 'Creativity',
+      description: 'Our team of experienced professionals brings fresh, innovative ideas to every project.',
     },
     {
       icon: Users,
-      title: 'Partnership',
-      description: 'Your success is our success. We work as an extension of your team, not just a vendor.',
+      title: 'Collaboration',
+      description: 'We act as strategic partners, working closely with you to understand your audience and goals.',
     },
     {
       icon: TrendingUp,
-      title: 'Results',
-      description: 'We measure our work by tangible outcomes that drive your business forward.',
+      title: 'Excellence',
+      description: 'We strive to offer exceptional service and deliver timeless results that drive engagement.',
     },
   ];
 
@@ -67,37 +68,37 @@ export default function About() {
               transition={{ delay: 0.4, duration: 0.8 }}
               className="text-xl md:text-2xl text-gray-400 font-light leading-relaxed"
             >
-              A modern marketing agency built for the digital age, where strategy meets creativity and data drives design.
+              A professional creative agency dedicated to capturing your special moments and defining your brand's core values.
             </motion.p>
           </div>
         </div>
       </section>
 
-      {/* STORY SECTION */}
+      {/* STORY SECTION - Content aligned with Crawl Digitally's "History and Commitment" */}
       <section className="py-20 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 lg:gap-24 items-start">
             <div>
               <Reveal>
                 <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-8 leading-tight">
-                  Our story
+                  Our commitment
                 </h2>
               </Reveal>
             </div>
             <div className="space-y-6">
               <Reveal delay={0.2}>
                 <p className="text-lg text-gray-400 font-light leading-relaxed">
-                  digisouq was founded on a simple belief: marketing should be both an art and a science. In a world saturated with noise, we help brands cut through the clutter with campaigns that are as strategic as they are stunning.
+                  We have become a trusted name in the creative sector by offering a holistic approach that tackles every aspect of your brand story. We don't just deliver services; we build relationships.
                 </p>
               </Reveal>
               <Reveal delay={0.3}>
                 <p className="text-lg text-gray-400 font-light leading-relaxed">
-                  We specialize in industries where presentation is everything—real estate and hospitality—while also providing the technical expertise to build robust digital experiences and intelligent automation solutions.
+                  Conveniently located and client-focused, we strive to offer exceptional service. Our expertise spans a variety of needs—from weddings and corporate events to comprehensive digital marketing strategies.
                 </p>
               </Reveal>
               <Reveal delay={0.4}>
                 <p className="text-lg text-gray-400 font-light leading-relaxed">
-                  Our team combines marketing strategists, creative directors, developers, and data analysts who share a passion for excellence and a commitment to delivering measurable results.
+                  With a team of skilled photographers, designers, and strategists known for their exceptional skills, we ensure every client leaves with results they will cherish for a lifetime.
                 </p>
               </Reveal>
             </div>
@@ -147,12 +148,12 @@ export default function About() {
           <div className="max-w-3xl mx-auto text-center">
             <Reveal>
               <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-8 leading-tight">
-                Our expertise spans industries
+                Our impact
               </h2>
             </Reveal>
             <Reveal delay={0.2}>
               <p className="text-xl text-gray-400 font-light leading-relaxed mb-12">
-                From luxury real estate developments to boutique restaurants, from e-commerce platforms to enterprise AI solutions—we bring deep industry knowledge and fresh perspectives to every project.
+                We are dedicated to delivering high-quality services that capture the essence of every special moment and brand story.
               </p>
             </Reveal>
             
@@ -176,16 +177,17 @@ export default function About() {
               Let's work together
             </h2>
             <p className="text-xl text-gray-400 font-light mb-12 max-w-2xl mx-auto">
-              Ready to transform your marketing? Get in touch and let's start a conversation.
+              Ready to transform your brand? Get in touch and let's start a conversation.
             </p>
-            <motion.a
-              href="/contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-block px-8 py-4 bg-white text-black text-sm font-light tracking-wide hover:bg-gray-200 transition-colors"
-            >
-              Contact us
-            </motion.a>
+            <Link to="/contact">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-block px-8 py-4 bg-white text-black text-sm font-light tracking-wide hover:bg-gray-200 transition-colors"
+              >
+                Contact us
+              </motion.button>
+            </Link>
           </div>
         </Reveal>
       </section>
@@ -195,8 +197,8 @@ export default function About() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 text-sm font-light">© 2024 digisouq. All rights reserved.</p>
             <div className="flex gap-8">
-              <a href="/" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Home</a>
-              <a href="/contact" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Contact</a>
+              <Link to="/" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Home</Link>
+              <Link to="/contact" className="text-gray-500 text-sm font-light hover:text-white transition-colors">Contact</Link>
             </div>
           </div>
         </div>
