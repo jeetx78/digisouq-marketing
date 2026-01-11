@@ -6,11 +6,9 @@ export default function Navigation() {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
   
-  // State to track if navbar should be hidden
   const [hidden, setHidden] = useState(false);
   const { scrollY } = useScroll();
 
-  // Logic: Hide nav if scrolling down > 150px, Show if scrolling up
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0;
     if (latest > previous && latest > 150) {
@@ -31,18 +29,23 @@ export default function Navigation() {
       className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-24">
           
-          {/* LOGO + TEXT SECTION */}
-          <Link to="/" className="flex items-center gap-3 group">
+          {/* LOGO + SPLIT TEXT */}
+          <Link to="/" className="flex items-center gap-4 group">
             <img 
               src="/logo.png" 
               alt="Digisouq Logo" 
-              className="h-10 w-auto object-contain" // Adjust h-10 to h-12 if you want it bigger
+              className="h-16 w-auto object-contain"
             />
-            <span className="text-white text-2xl font-light tracking-wider group-hover:opacity-80 transition-opacity">
-              digisouq
-            </span>
+            <div className="flex items-baseline group-hover:opacity-80 transition-opacity">
+              <span className="text-white text-2xl font-light tracking-wider uppercase">
+                DIGI
+              </span>
+              <span className="text-red-600 text-2xl font-light tracking-wider ml-1">
+                Souq
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -84,7 +87,6 @@ export default function Navigation() {
             </Link>
           </div>
 
-          {/* Mobile Menu Placeholder */}
           <div className="md:hidden">
             <Link to="/contact" className="text-sm font-light text-white">
               Menu

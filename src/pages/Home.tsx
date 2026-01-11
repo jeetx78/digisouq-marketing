@@ -3,9 +3,11 @@ import { useRef, useState, useEffect } from 'react';
 import { Reveal } from '../components/Reveal';
 import Marquee from '../components/Marquee';
 import { Link } from 'react-router-dom';
+import { Instagram, Linkedin } from 'lucide-react';
 
-// Parallax Image Helper
-function ParallaxImage({ src, alt }: { src: string; alt: string }) {
+// NEW: Parallax Video Component
+// Handles autoplay, looping, and the scroll parallax effect
+function ParallaxVideo({ src }: { src: string }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -15,18 +17,23 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
 
   return (
     <div ref={ref} className="relative w-full h-full overflow-hidden rounded-sm border border-white/10 group">
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10 pointer-events-none"></div>
-      <motion.img 
+      {/* Dark overlay to ensure it doesn't clash with the theme */}
+      <div className="absolute inset-0 bg-black/20 z-10 pointer-events-none"></div>
+      
+      <motion.video 
         src={src}
-        alt={alt}
         style={{ y }}
-        className="w-full h-[120%] object-cover opacity-80 transition-opacity duration-700 group-hover:opacity-100"
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="w-full h-[120%] object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
       />
     </div>
   );
 }
 
-// NEW: Card Component for the Carousel
+// Service Card Component (Same as before)
 function ServiceCard({ service, isActive, onClick }: { service: any, isActive: boolean, onClick: () => void }) {
   return (
     <div 
@@ -40,7 +47,6 @@ function ServiceCard({ service, isActive, onClick }: { service: any, isActive: b
         bg-white text-black rounded-[2rem] p-4 flex flex-col h-[600px] shadow-2xl overflow-hidden
         ${isActive ? 'shadow-white/10' : ''}
       `}>
-        {/* Image Area */}
         <div className="h-[60%] w-full rounded-[1.5rem] overflow-hidden mb-6 bg-gray-100 relative">
            <img 
              src={service.img} 
@@ -48,13 +54,10 @@ function ServiceCard({ service, isActive, onClick }: { service: any, isActive: b
              className="w-full h-full object-cover"
              draggable="false"
            />
-           {/* Shine effect for active card */}
            {isActive && (
              <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent pointer-events-none mix-blend-overlay"></div>
            )}
         </div>
-
-        {/* Text Area */}
         <div className="flex flex-col flex-grow px-2 pb-4 text-center md:text-left">
           <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">{service.title}</h3>
           <p className="text-gray-600 font-light leading-relaxed text-sm md:text-base line-clamp-5">
@@ -118,25 +121,19 @@ export default function Home() {
     }
   ];
 
-  // Logic to track active center card
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Handle scroll to detect which item is in the center
   const handleScroll = () => {
     if (!scrollRef.current) return;
-    
     const container = scrollRef.current;
     const centerPoint = container.scrollLeft + (container.clientWidth / 2);
     
-    // Find the child closest to the center point
     const children = Array.from(container.children) as HTMLElement[];
     let closestIndex = 0;
     let closestDistance = Infinity;
 
     children.forEach((child, index) => {
-      // Logic: Child Center = Child Left Offset + (Child Width / 2)
-      // Note: offsetLeft is relative to the parent because of 'relative' positioning in parent
       const childCenter = child.offsetLeft + (child.clientWidth / 2);
       const distance = Math.abs(childCenter - centerPoint);
 
@@ -149,14 +146,11 @@ export default function Home() {
     setActiveIndex(closestIndex);
   };
 
-  // Click to center a card
   const scrollToCard = (index: number) => {
     if (!scrollRef.current) return;
     const container = scrollRef.current;
     const children = Array.from(container.children) as HTMLElement[];
     const target = children[index];
-    
-    // Calculate scroll position to center the target
     const scrollPos = target.offsetLeft - (container.clientWidth / 2) + (target.clientWidth / 2);
     
     container.scrollTo({
@@ -165,9 +159,7 @@ export default function Home() {
     });
   };
 
-  // Center the initial card on load
   useEffect(() => {
-    // Small timeout to ensure render is complete
     setTimeout(() => {
        scrollToCard(0);
     }, 100);
@@ -209,7 +201,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* VISION SECTION */}
+      {/* VISION SECTION (Holistic Approach) */}
       <section className="py-32 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -229,10 +221,8 @@ export default function Home() {
 
              <Reveal delay={0.4}>
                 <div className="aspect-[4/5]">
-                  <ParallaxImage 
-                    src="/istockphoto-539953664-612x612.jpg"
-                    alt="Strategic Growth Graph"
-                  />
+                  {/* REPLACED IMAGE WITH VIDEO 1: ndss.mp4 */}
+                  <ParallaxVideo src="/ndss.mp4" />
                 </div>
              </Reveal>
           </div>
@@ -242,7 +232,7 @@ export default function Home() {
       {/* MARQUEE SECTION */}
       <Marquee />
 
-      {/* NEW: CENTER-FOCUSED CAROUSEL */}
+      {/* CAROUSEL SECTION */}
       <section className="py-24 border-t border-white/10 overflow-hidden bg-black relative">
         <div className="px-6 lg:px-8 mb-12 relative z-10">
            <div className="max-w-7xl mx-auto text-center">
@@ -253,7 +243,6 @@ export default function Home() {
            </div>
         </div>
 
-        {/* Scroll Container */}
         <div 
           ref={scrollRef}
           onScroll={handleScroll}
@@ -261,7 +250,6 @@ export default function Home() {
           style={{ 
             scrollbarWidth: 'none', 
             msOverflowStyle: 'none',
-            // Padding-left is 50vw to center the first item initially
             paddingLeft: '50vw',
             paddingRight: '50vw'
           }}
@@ -278,7 +266,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRECISION SECTION */}
+      {/* PRECISION SECTION (Capturing Moments) */}
       <section className="py-32 px-6 lg:px-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -297,13 +285,45 @@ export default function Home() {
             
             <Reveal delay={0.4}>
               <div className="aspect-[4/5]">
-                <ParallaxImage 
-                  src="/pg.jpg"
-                  alt="Professional Photography" 
-                />
+                {/* REPLACED IMAGE WITH VIDEO 2: ppop.mp4 */}
+                <ParallaxVideo src="/ppop.mp4" />
               </div>
             </Reveal>
           </div>
+        </div>
+      </section>
+
+      {/* SOCIAL MEDIA SECTION */}
+      <section className="py-16 px-6 lg:px-8 border-t border-white/5">
+        <div className="max-w-7xl mx-auto text-center">
+          <Reveal>
+            <p className="text-sm text-gray-500 font-light tracking-widest uppercase mb-6">Connect with us</p>
+            <div className="flex justify-center items-center gap-8">
+              <a 
+                href="https://www.instagram.com/digisouq.in/?hl=en" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-3"
+              >
+                <div className="p-4 rounded-full border border-white/10 group-hover:bg-white group-hover:text-black transition-all duration-300">
+                  <Instagram className="w-6 h-6" />
+                </div>
+                <span className="text-sm font-light text-gray-400 group-hover:text-white transition-colors">Instagram</span>
+              </a>
+
+              <a 
+                href="https://www.linkedin.com/in/digi-souq-7831092b8" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-3"
+              >
+                <div className="p-4 rounded-full border border-white/10 group-hover:bg-white group-hover:text-black transition-all duration-300">
+                  <Linkedin className="w-6 h-6" />
+                </div>
+                <span className="text-sm font-light text-gray-400 group-hover:text-white transition-colors">LinkedIn</span>
+              </a>
+            </div>
+          </Reveal>
         </div>
       </section>
 
