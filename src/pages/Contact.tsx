@@ -73,7 +73,7 @@ export default function Contact() {
                     <div>
                       <p className="text-sm text-gray-500 font-light mb-1">Phone</p>
                       <a href="tel:8447240544" className="text-white font-light hover:text-gray-300 transition-colors">
-                        84472 40544
+                        73891 65536 <br />84472 40544
                       </a>
                     </div>
                   </div>
@@ -82,9 +82,11 @@ export default function Contact() {
                     <div>
                       <p className="text-sm text-gray-500 font-light mb-1">Office</p>
                       <p className="text-white font-light">
-                        123 Business District
+                        Tower B 1408, 14th Floor
                         <br />
-                        Dubai, UAE
+                        Bhutani Alphathum, Sector 90
+                        <br />
+                        Noida, Uttar Pradesh 201304
                       </p>
                     </div>
                   </div>
