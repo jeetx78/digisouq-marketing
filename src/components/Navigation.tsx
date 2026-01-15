@@ -40,10 +40,10 @@ export default function Navigation() {
             />
             <div className="flex items-baseline group-hover:opacity-80 transition-opacity">
               <span className="text-white text-2xl font-light tracking-wider uppercase">
-                DIGI
+                
               </span>
               <span className="text-red-600 text-2xl font-light tracking-wider ml-1">
-                Souq
+                
               </span>
             </div>
           </Link>

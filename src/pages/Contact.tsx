@@ -1,27 +1,20 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    service: '',
-    message: '',
-  });
+  
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = "https://js-na2.hsforms.net/forms/embed/244873659.js";
+    script.defer = true;
+    script.async = true;
+    document.body.appendChild(script);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -55,7 +48,7 @@ export default function Contact() {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-5 gap-16 lg:gap-24">
             
-            {/* CONTACT INFO (Updated from PDF Page 9) */}
+            {/* CONTACT INFO (Left Side) */}
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -80,7 +73,7 @@ export default function Contact() {
                     <div>
                       <p className="text-sm text-gray-500 font-light mb-1">Phone</p>
                       <a href="tel:8447240544" className="text-white font-light hover:text-gray-300 transition-colors">
-                        73891 65536 <br /> 84472 40544
+                        84472 40544
                       </a>
                     </div>
                   </div>
@@ -89,11 +82,9 @@ export default function Contact() {
                     <div>
                       <p className="text-sm text-gray-500 font-light mb-1">Office</p>
                       <p className="text-white font-light">
-                        Tower B 1408, 14th Floor
+                        123 Business District
                         <br />
-                        Bhutani Alphathum, Sector 90
-                        <br />
-                        Noida, Uttar Pradesh 201304
+                        Dubai, UAE
                       </p>
                     </div>
                   </div>
@@ -101,96 +92,25 @@ export default function Contact() {
               </div>
             </motion.div>
 
-            {/* FORM SECTION */}
+            {/* FORM SECTION - UPDATED TO WHITE THEME */}
             <motion.div 
                initial={{ opacity: 0, x: 30 }}
                whileInView={{ opacity: 1, x: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-               className="md:col-span-3"
+               // CHANGED: bg-white, text-black, light borders
+               className="md:col-span-3 bg-white p-8 rounded-sm border border-gray-200 text-black shadow-xl"
             >
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-light text-gray-400 mb-2">Name *</label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white font-light focus:outline-none focus:border-white/30 transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-light text-gray-400 mb-2">Email *</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white font-light focus:outline-none focus:border-white/30 transition-colors"
-                    />
-                  </div>
-                </div>
+              <h3 className="text-xl font-light mb-6 text-black">Send us a message</h3>
+              
+              <div 
+                className="hs-form-frame" 
+                data-region="na2" 
+                data-form-id="7b603c18-6b77-4ba4-8ad8-cd72b9cd5ba2" 
+                data-portal-id="244873659"
+              >
+              </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="company" className="block text-sm font-light text-gray-400 mb-2">Company</label>
-                    <input
-                      type="text"
-                      id="company"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white font-light focus:outline-none focus:border-white/30 transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="service" className="block text-sm font-light text-gray-400 mb-2">Service</label>
-                    <select
-                      id="service"
-                      name="service"
-                      value={formData.service}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white font-light focus:outline-none focus:border-white/30 transition-colors [&>option]:bg-black"
-                    >
-                      <option value="">Select a service</option>
-                      <option value="branding">Branding Strategy</option>
-                      <option value="creatives">Digital Creatives</option>
-                      <option value="website">Website Development</option>
-                      <option value="social">Social Media</option>
-                      <option value="research">Research & Story</option>
-                      <option value="photo-video">Photography & Videos</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-light text-gray-400 mb-2">Message *</label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={6}
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white font-light focus:outline-none focus:border-white/30 transition-colors resize-none"
-                  ></textarea>
-                </div>
-
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full md:w-auto px-8 py-4 bg-white text-black text-sm font-light tracking-wide hover:bg-gray-200 transition-colors"
-                >
-                  Send message
-                </motion.button>
-              </form>
             </motion.div>
           </div>
         </div>
